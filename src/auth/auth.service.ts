@@ -23,10 +23,10 @@ export class AuthService {
 //   }
 
   async signIn(loginDto: LoginDto) {
-    const { name, password } = loginDto;
+    const { email, password } = loginDto;
 
     // Find user by name or email
-    const user = await this.usersService.findOneByNameOrEmail(name);
+    const user = await this.usersService.findOneByNameOrEmail(email);
 
     if (!user || user.password !== password) {
       // If using bcrypt: await bcrypt.compare(password, user.password)
