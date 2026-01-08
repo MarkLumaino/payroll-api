@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma/client';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { config } from 'dotenv';
 
@@ -19,4 +19,6 @@ export class PrismaService extends PrismaClient {
       }),
     });
   }
+  
 }
+

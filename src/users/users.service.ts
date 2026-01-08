@@ -2,71 +2,108 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../../prisma/prisma.service';
-import { User } from '@prisma/client';
-
+import prisma from "../lib/prisma";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaservice: PrismaService) {}
 
 
+  // Create user with hashed password
   async create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({
-      data: createUserDto,
-    });
-  }
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-  async findAll() {
-    return await this.prisma.user.findMany({
+    return prisma.user.create({
+      data: {
+        ...createUserDto,
+        password: hashedPassword,
+      },
       select: {
         id: true,
         name: true,
-        email: true
-      }
+        email: true,
+      },
     });
   }
 
-  // async findOne(id: number) {
-  //   return this.prisma.user.findUnique({
-  //     where: { id },
-  //     select: {
-  //       id: true,
-  //       name: true,
-  //       email: true,
-  //     },
-  //   });
-  // }
-  async findOneById(id: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
-      where: { id }  // ✅ pass the variable `id`
+
+  // Get all users (exclude password)
+  async findAll() {
+    return prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+      },
     });
   }
 
+    // Get user by ID
+  async findOneById(id: number) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+      },
+    });
+  }
+
+  // Update user
   async update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prisma.user.update({
+    const data: any = { ...updateUserDto };
+
+    // If password is being updated, hash it
+    if (updateUserDto.password) {
+      data.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
+
+    return prisma.user.update({
       where: { id },
-      data: updateUserDto,
+      data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+      },
     });
   }
 
+  // Delete user
   async remove(id: number) {
-    return this.prisma.user.delete({
+    return prisma.user.delete({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
     });
   }
 
-  // async findOneByNameOrEmail(identifier: string): Promise<User | null> {
-  //   return this.prisma.user.findFirst({
-  //     where: {
-  //       OR: [{ name: identifier }, { email: identifier }],
-  //     },
-  //   });
-  // }
-
+  // Find by name or email (for login)
   async findOneByNameOrEmail(identifier: string) {
-  return this.prisma.user.findFirst({
-    where: { OR: [{ name: identifier }, { email: identifier }] },
-  });
-}
+    return prisma.user.findFirst({
+      where: {
+        OR: [{ name: identifier }, { email: identifier }],
+      },
+    });
+  }
 
+  // Verify password (for login)
+  async verifyPassword(userId: number, plainPassword: string): Promise<boolean> {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { password: true },
+    });
+
+    if (!user) return false;
+
+    return bcrypt.compare(plainPassword, user.password);
+  }
 }
