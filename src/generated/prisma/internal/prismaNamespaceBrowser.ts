@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Employee: 'Employee'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,10 +76,38 @@ export const UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   password: 'password',
-  createdAt: 'createdAt'
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const EmployeeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  lastName: 'lastName',
+  Extension: 'Extension',
+  age: 'age',
+  sex: 'sex',
+  civil: 'civil',
+  citizenship: 'citizenship',
+  religion: 'religion',
+  dateOfBirth: 'dateOfBirth',
+  placeOfBirth: 'placeOfBirth',
+  birthZipCode: 'birthZipCode',
+  heightCm: 'heightCm',
+  weightKg: 'weightKg',
+  bloodType: 'bloodType',
+  tshirtSize: 'tshirtSize',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -104,4 +133,18 @@ export const UserOrderByRelevanceFieldEnum = {
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const EmployeeOrderByRelevanceFieldEnum = {
+  firstName: 'firstName',
+  middleName: 'middleName',
+  lastName: 'lastName',
+  Extension: 'Extension',
+  citizenship: 'citizenship',
+  religion: 'religion',
+  placeOfBirth: 'placeOfBirth',
+  birthZipCode: 'birthZipCode'
+} as const
+
+export type EmployeeOrderByRelevanceFieldEnum = (typeof EmployeeOrderByRelevanceFieldEnum)[keyof typeof EmployeeOrderByRelevanceFieldEnum]
 

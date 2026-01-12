@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "mysql",
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  email     String   @unique(map: \"email\") @db.VarChar(255)\n  name      String?  @db.VarChar(255)\n  password  String   @db.VarChar(255)\n  createdAt DateTime @default(now()) @db.DateTime(0)\n\n  @@map(\"users\")\n}\n",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ndatasource db {\n  provider = \"mysql\"\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\nenum Role {\n  ADMIN\n  USER\n}\n\nenum Sex {\n  Male\n  Female\n}\n\nenum CivilStatus {\n  Single\n  Married\n  Widowed\n  Divorced\n  Separated\n}\n\nenum BloodType {\n  A_POS\n  A_NEG\n  B_POS\n  B_NEG\n  AB_POS\n  AB_NEG\n  O_POS\n  O_NEG\n}\n\nenum TShirtSize {\n  XS\n  S\n  M\n  L\n  XL\n  XXL\n}\n\nmodel User {\n  id Int @id @default(autoincrement())\n\n  email    String  @unique(map: \"email\") @db.VarChar(255)\n  name     String? @db.VarChar(255)\n  password String  @db.VarChar(255)\n\n  role Role @default(USER)\n\n  createdAt DateTime @default(now()) @db.DateTime(0)\n  updatedAt DateTime @updatedAt\n\n  employee Employee?\n\n  @@map(\"users\")\n}\n\nmodel Employee {\n  id Int @id @default(autoincrement())\n\n  userId Int  @unique\n  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  //Name\n  firstName  String\n  middleName String?\n  lastName   String\n  Extension  String?\n\n  //Personal Info\n  age         Int\n  sex         Sex\n  civil       CivilStatus\n  citizenship String\n  religion    String?\n\n  //Birth Details\n  dateOfBirth  DateTime\n  placeOfBirth String\n  birthZipCode String\n\n  //Physical Info\n  heightCm   Int?\n  weightKg   Int?\n  bloodType  BloodType?\n  tshirtSize TShirtSize?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map(\"employees\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"users\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"employee\",\"kind\":\"object\",\"type\":\"Employee\",\"relationName\":\"EmployeeToUser\"}],\"dbName\":\"users\"},\"Employee\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"EmployeeToUser\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"middleName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"Extension\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"age\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sex\",\"kind\":\"enum\",\"type\":\"Sex\"},{\"name\":\"civil\",\"kind\":\"enum\",\"type\":\"CivilStatus\"},{\"name\":\"citizenship\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"religion\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dateOfBirth\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"placeOfBirth\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"birthZipCode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"heightCm\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"weightKg\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bloodType\",\"kind\":\"enum\",\"type\":\"BloodType\"},{\"name\":\"tshirtSize\",\"kind\":\"enum\",\"type\":\"TShirtSize\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"employees\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -183,6 +183,16 @@ export interface PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.employee`: Exposes CRUD operations for the **Employee** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Employees
+    * const employees = await prisma.employee.findMany()
+    * ```
+    */
+  get employee(): Prisma.EmployeeDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

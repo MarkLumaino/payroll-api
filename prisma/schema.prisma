@@ -19,14 +19,88 @@ enum Role {
   USER
 }
 
+enum Sex {
+  Male 
+  Female
+}
+
+enum CivilStatus {
+  Single
+  Married
+  Widowed
+  Divorced
+  Separated
+}
+
+enum BloodType {
+  A_POS
+  A_NEG
+  B_POS
+  B_NEG
+  AB_POS
+  AB_NEG
+  O_POS
+  O_NEG
+}
+
+enum TShirtSize {
+  XS
+  S
+  M 
+  L 
+  XL
+  XXL
+}
+
 model User {
   id        Int      @id @default(autoincrement())
+
   email     String   @unique(map: "email") @db.VarChar(255)
   name      String?  @db.VarChar(255)
   password  String   @db.VarChar(255)
+
   role Role @default(USER)
+
   createdAt DateTime @default(now()) @db.DateTime(0)
   updatedAt DateTime @updatedAt
 
+  employee Employee?
+
   @@map("users")
+}
+
+model Employee {
+  id  Int @id @default(autoincrement())
+
+  userId  Int @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) 
+
+  //Name
+  firstName String
+  middleName String?
+  lastName String
+  Extension String?
+
+  //Personal Info
+  age Int
+  sex Sex
+  civil CivilStatus
+  citizenship String
+  religion String?
+
+  //Birth Details
+  dateOfBirth DateTime
+  placeOfBirth String
+  birthZipCode String
+
+  //Physical Info
+  heightCm  Int?
+  weightKg Int?
+  bloodType BloodType?
+  tshirtSize TShirtSize?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("employees")
 }

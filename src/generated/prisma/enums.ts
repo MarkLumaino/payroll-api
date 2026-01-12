@@ -9,7 +9,54 @@
 * 🟢 You can import this file directly.
 */
 
+export const Role = {
+  ADMIN: 'ADMIN',
+  USER: 'USER'
+} as const
+
+export type Role = (typeof Role)[keyof typeof Role]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const Sex = {
+  Male: 'Male',
+  Female: 'Female'
+} as const
+
+export type Sex = (typeof Sex)[keyof typeof Sex]
+
+
+export const CivilStatus = {
+  Single: 'Single',
+  Married: 'Married',
+  Widowed: 'Widowed',
+  Divorced: 'Divorced',
+  Separated: 'Separated'
+} as const
+
+export type CivilStatus = (typeof CivilStatus)[keyof typeof CivilStatus]
+
+
+export const BloodType = {
+  A_POS: 'A_POS',
+  A_NEG: 'A_NEG',
+  B_POS: 'B_POS',
+  B_NEG: 'B_NEG',
+  AB_POS: 'AB_POS',
+  AB_NEG: 'AB_NEG',
+  O_POS: 'O_POS',
+  O_NEG: 'O_NEG'
+} as const
+
+export type BloodType = (typeof BloodType)[keyof typeof BloodType]
+
+
+export const TShirtSize = {
+  XS: 'XS',
+  S: 'S',
+  M: 'M',
+  L: 'L',
+  XL: 'XL',
+  XXL: 'XXL'
+} as const
+
+export type TShirtSize = (typeof TShirtSize)[keyof typeof TShirtSize]
